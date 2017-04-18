@@ -6,9 +6,7 @@ import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Binder;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Message;
 import android.util.Log;
 
 public class StepService extends Service {
@@ -21,9 +19,9 @@ public class StepService extends Service {
 
     private StepBinder binder = new StepBinder();
     public class StepBinder extends Binder{
-        public int getStepCount(){
+        public StepService getService(){
             //Log.d("StepService","返回函数中步数为"+stepCount);
-            return stepCount;
+            return StepService.this;
         }
     }
     @Override
@@ -48,8 +46,11 @@ public class StepService extends Service {
                     }catch (InterruptedException e){
                         e.printStackTrace();
                     }
-                    stepCount = listener.getStepCounts();
-                   // Log.d("StepService", "进程中的步数为" + stepCount);
+                    if(callback != null) {
+                        stepCount = listener.getStepCounts();//每0.2秒获取一次步数
+                        callback.onDataChanged(Integer.toString(stepCount));
+                        // Log.d("StepService", "进程中的步数为" + stepCount);
+                    }
                 }
             }
         }).start();
@@ -73,5 +74,15 @@ public class StepService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    private CallBack callback = null;
+
+    public void setCallback(CallBack callback) {
+        this.callback = callback;
+    }
+
+    public interface  CallBack{
+        void onDataChanged(String data);
     }
 }

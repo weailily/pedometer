@@ -1,12 +1,11 @@
 package com.example.pedometer;
 
-import android.app.Application;
 import android.content.Context;
 
-/**
- * Created by weailily on 2017/3/13 0013.
- */
-public class MyApplication extends Application {
+import org.litepal.LitePalApplication;
+
+
+public class MyApplication extends LitePalApplication {
     private  static Context context;
 
     public void onCreate(){

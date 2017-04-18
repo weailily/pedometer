@@ -6,6 +6,9 @@ import android.hardware.SensorEventListener;
 import android.util.Log;
 import android.widget.Toast;
 
+/**
+ * 计步的主要算法类，自适应波峰检测法
+ */
 
 public class StepDetector implements SensorEventListener {
 
@@ -45,11 +48,6 @@ public class StepDetector implements SensorEventListener {
     public long differenceOfTime = 0;
 
 
-
-    private static long start = 0;
-
-    private static long end = 0;
-
     public StepDetector() {
     }
 
@@ -79,16 +77,16 @@ public class StepDetector implements SensorEventListener {
             Log.d("StepService","时间差是"+differenceOfTime);
             if(peakOfWave >= 11.28f && peakOfWave <= 17.86f){
                 if(differenceOfTime >= 300&&differenceOfTime <= 800){
-                    Toast.makeText(MyApplication.getContext(),"走路。。。",Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(MyApplication.getContext(),"走路。。。",Toast.LENGTH_SHORT).show();
                     stepCounts++;
-                    Log.d("StepService","走路时显示步数为： "+ stepCounts);
+                    //Log.d("StepService","走路时显示步数为： "+ stepCounts);
                 }
             }else
                 if(peakOfWave >17.86f){
                     if(differenceOfTime >= 200&&differenceOfTime <= 500){
                         stepCounts++;
-                        Log.d("StepService","跑步时显示步数为： "+ stepCounts);
-                        Toast.makeText(MyApplication.getContext(),"跑步。。。",Toast.LENGTH_SHORT).show();
+                        //Log.d("StepService","跑步时显示步数为： "+ stepCounts);
+                        //Toast.makeText(MyApplication.getContext(),"跑步。。。",Toast.LENGTH_SHORT).show();
                     }
                 }
         }
@@ -106,7 +104,7 @@ public class StepDetector implements SensorEventListener {
         }
         if (!isDirectionUp && lastStatus && (continueUpFormerCount >= 3)) {
             peakOfWave = oldValue;
-            Log.d("StepService","peakOfWave = "+peakOfWave);
+           // Log.d("StepService","peakOfWave = "+peakOfWave);
             return true;
         } else if (!lastStatus && isDirectionUp) {
             valleyOfWave = oldValue;
