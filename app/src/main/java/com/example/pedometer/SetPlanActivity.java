@@ -14,7 +14,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
+
+
+import com.example.pedometer.SharedPreferencesUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

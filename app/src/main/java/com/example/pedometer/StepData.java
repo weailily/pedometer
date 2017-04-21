@@ -3,22 +3,21 @@ package com.example.pedometer;
 
 import org.litepal.crud.DataSupport;
 
-import java.util.Date;
 
 public class StepData extends DataSupport {
     private int id;//主键
-    private int stepCount;//每天步数
-    private Date today;//日期
+    private String  stepCount ;//每天步数
+    private String today;//日期
 
     public int getId() {
         return id;
     }
 
-    public int getStepCount() {
+    public String getStepCount() {
         return stepCount;
     }
 
-    public Date getToday() {
+    public String getToday() {
         return today;
     }
 
@@ -26,12 +25,16 @@ public class StepData extends DataSupport {
         this.id = id;
     }
 
-    public void setStepCount(int stepCount) {
+    public void setStepCount(String stepCount) {
         this.stepCount = stepCount;
     }
 
-    public void setToday(Date today) {
+    public void setToday(String today) {
         this.today = today;
     }
 
+     public String  toString(){
+     String s = "      "+today+"                                               "+stepCount+"步";
+     return s;
+     }
 }

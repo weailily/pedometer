@@ -8,6 +8,13 @@ import android.hardware.SensorManager;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
+
+import org.litepal.crud.DataSupport;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 
 public class StepService extends Service {
     public static int  stepCount = 0;
@@ -51,6 +58,47 @@ public class StepService extends Service {
                         callback.onDataChanged(Integer.toString(stepCount));
                         // Log.d("StepService", "进程中的步数为" + stepCount);
                     }
+                }
+            }
+        }).start();
+        new Thread( new Runnable() {
+            @Override
+            public void run() {
+                StepData sData = DataSupport.findLast(StepData.class);
+                if(sData == null){
+                    sData = new StepData();
+                    sData.setId(0);
+                    sData.setStepCount("0");
+                    String today = new SimpleDateFormat("yyyy-MM-dd",Locale.CHINA).format(Calendar.getInstance().getTime());
+                    Log.d("SetPlanActivity",today);
+                    sData.setToday(today);
+                    sData.save();
+                }
+                else {
+                    String lastDate = sData.getToday();
+                    String curDate =  new SimpleDateFormat("yyyy-MM-dd",Locale.CHINA).format(Calendar.getInstance().getTime());
+                    if (!curDate.equals(lastDate)) {
+                        StepData stepData = new StepData();
+                        stepData.setStepCount("0");
+                        String today1 = new SimpleDateFormat("yyyy-MM-dd",Locale.CHINA).format(Calendar.getInstance().getTime());
+                        sData.setToday(today1);
+                        stepData.save();
+                    }
+
+                }
+                while(quit) {
+                    try{
+                        Thread.sleep(30000);
+                    }catch (InterruptedException e){
+                        e.printStackTrace();
+                    }
+                    StepData stepData = new StepData();
+                    stepData.setStepCount(Integer.toString(stepCount));
+                    //Toast.makeText(MyApplication.getContext(),stepData.toString(),Toast.LENGTH_SHORT).show();
+                    String today2 = new SimpleDateFormat("yyyy-MM-dd",Locale.CHINA).format(Calendar.getInstance().getTime());
+                    sData.setToday(today2);
+                    int maxId = DataSupport.findLast(StepData.class).getId();
+                    stepData.update(maxId);
                 }
             }
         }).start();

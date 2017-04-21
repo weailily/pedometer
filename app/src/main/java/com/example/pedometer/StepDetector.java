@@ -4,7 +4,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.util.Log;
-import android.widget.Toast;
+
 
 /**
  * 计步的主要算法类，自适应波峰检测法
@@ -64,7 +64,7 @@ public class StepDetector implements SensorEventListener {
        // Log.d("StepDetector","x= "+xValue+" ");
         //Log.d("StepDetector","y= "+yValue+" ");
       // Log.d("StepDetector","z= "+zValue+" ");
-      Log.d("StepService","a= "+aValueNew+" ");
+      //Log.d("StepService","a= "+aValueNew+" ");
         DetectorNewStep(aValueNew);
     }
     public void  DetectorNewStep(float value){
@@ -74,7 +74,7 @@ public class StepDetector implements SensorEventListener {
             timeOfLastPeak = timeOfThisPeak;
             timeOfThisPeak = System.currentTimeMillis();
             differenceOfTime = timeOfThisPeak - timeOfLastPeak;
-            Log.d("StepService","时间差是"+differenceOfTime);
+            //Log.d("StepService","时间差是"+differenceOfTime);
             if(peakOfWave >= 11.28f && peakOfWave <= 17.86f){
                 if(differenceOfTime >= 300&&differenceOfTime <= 800){
                     //Toast.makeText(MyApplication.getContext(),"走路。。。",Toast.LENGTH_SHORT).show();

@@ -6,51 +6,59 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffffff"
-    tools:context = "com.example.pedometer.MainActivity"
-   >
-    <RelativeLayout
+    android:weightSum="7"
+    tools:context = "com.example.pedometer.MainActivity">
+    <LinearLayout
+        android:id="@+id/ll_setting"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="200dp">
-        <!--android:background="@mipmap/step_bg"-->
-
-        <TextView
-            android:id="@+id/look_data"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="20dp"
-            android:drawableLeft="@drawable/home_statistical"
-            android:drawablePadding="10dp"
-            android:gravity="center_vertical"
-            android:text="@string/look_data"
-            android:textColor="#333333"/>
-
-
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
         <TextView
             android:id="@+id/plan_set"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="20dp"
-            android:layout_alignTop="@+id/look_data"
-            android:drawableLeft="@drawable/home_question_mark"
+            android:layout_weight="1"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="40dp"
+            android:drawableStart="@drawable/home_question_mark"
             android:drawablePadding="10dp"
             android:gravity="center_vertical"
             android:text="@string/plan_set"
             android:textColor="#333333" />
         <TextView
+            android:id="@+id/look_data"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="0dp"
+            android:layout_marginTop="40dp"
+            android:drawableStart="@drawable/home_statistical"
+            android:drawablePadding="10dp"
+            android:gravity="center_vertical"
+            android:text="@string/look_data"
+            android:textColor="#333333"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/ll_steps"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_below="@+id/ll_setting"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="98dp">
+        <TextView
             android:id="@+id/step_count"
-            android:layout_width="150dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="45sp"
-            android:layout_centerHorizontal="true"
-            android:gravity="center"
-            android:layout_marginTop="150dp"
             android:padding="8dp"
-            tools:text ="100"
-            />
-    </RelativeLayout>
+            tools:text= "100"/>
+    </LinearLayout>
+    <include layout="@layout/activity_bottom"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_alignParentBottom="true"
+             android:layout_alignParentStart="true"/>
 </RelativeLayout>

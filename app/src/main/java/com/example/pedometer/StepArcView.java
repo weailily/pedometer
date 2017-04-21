@@ -10,6 +10,9 @@ import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
+
+import com.example.pedometer.MyApplication;
+
 /**
  * Created by DylanAndroid on 2016/5/26.
  * 显示步数的圆弧
@@ -87,7 +90,7 @@ public class StepArcView extends View {
     private void drawArcYellow(Canvas canvas, RectF rectF) {
         Paint paint = new Paint();
         /** 默认画笔颜色，黄色 */
-        paint.setColor(ContextCompat.getColor(MyApplication.getContext(),R.color.yellow));
+        paint.setColor(ContextCompat.getColor(MyApplication.getContext(), R.color.yellow));
         /** 结合处为圆弧*/
         paint.setStrokeJoin(Paint.Join.ROUND);
         /** 设置画笔的样式 Paint.Cap.Round ,Cap.SQUARE等分别为圆形、方形*/
