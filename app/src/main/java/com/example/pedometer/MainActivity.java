@@ -59,30 +59,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         public void onServiceDisconnected(ComponentName componentName) {
 
         }
-    };
-    Handler  handler = new Handler(){
-        public void handleMessage(Message msg){
-            super.handleMessage(msg);
-            switch (msg.what)
-            {
-                case 1:
-                    stepCount.setText(msg.getData().getString("data"));
-                    break;
-
-                default:
-                    break;
+        Handler  handler = new Handler(){
+            public void handleMessage(Message msg){
+                super.handleMessage(msg);
+                switch (msg.what)
+                {
+                    case 1:
+                        stepCount.setText(msg.getData().getString("data"));
+                        break;
+                    default:
+                        break;
+                }
             }
-        }
+        };
     };
-    Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-            handler.postDelayed(runnable, 30000);
-            Message message = new Message( );
-            message.what = 2;
-            handler.sendMessage(message);
-        }
-    };
+
     public void initViews(){
         lookData = (TextView)findViewById(R.id.look_data);
         stepCount = (TextView)findViewById(R.id.step_count);

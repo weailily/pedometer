@@ -18,6 +18,8 @@ import java.util.Locale;
 
 public class StepService extends Service {
     public static int  stepCount = 0;
+    public static int sCount ;//从数据库中取出的数据
+    //public boolean addsCount;//是否加过了数据库中步数
 
     private boolean quit = true;
 
@@ -39,28 +41,11 @@ public class StepService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d("StepService","Service is Created");
-        sensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);//获取系统传感器管理服务
+        Log.d("StepService", "Service is Created");
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);//获取系统传感器管理服务
         Sensor sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);//加速度传感器
         listener = new StepDetector();//计步监听类实例
-        sensorManager.registerListener(listener,sensor,SensorManager.SENSOR_DELAY_NORMAL);//为加速度传感器注册监听器
-        new Thread( new Runnable() {
-            @Override
-            public void run() {
-                while(quit) {
-                    try{
-                        Thread.sleep(200);
-                    }catch (InterruptedException e){
-                        e.printStackTrace();
-                    }
-                    if(callback != null) {
-                        stepCount = listener.getStepCounts();//每0.2秒获取一次步数
-                        callback.onDataChanged(Integer.toString(stepCount));
-                        // Log.d("StepService", "进程中的步数为" + stepCount);
-                    }
-                }
-            }
-        }).start();
+        sensorManager.registerListener(listener, sensor, SensorManager.SENSOR_DELAY_NORMAL);//为加速度传感器注册监听器
         new Thread( new Runnable() {
             @Override
             public void run() {
@@ -80,9 +65,13 @@ public class StepService extends Service {
                     if (!curDate.equals(lastDate)) {
                         StepData stepData = new StepData();
                         stepData.setStepCount("0");
-                        String today1 = new SimpleDateFormat("yyyy-MM-dd",Locale.CHINA).format(Calendar.getInstance().getTime());
-                        sData.setToday(today1);
+                        sData.setToday(curDate);
                         stepData.save();
+                        sCount = 0;
+                    }
+                    else{
+                        sCount = Integer.valueOf(sData.getStepCount());
+                        Log.d("SetPlanActivity","jfalkfhaajfjahafhlahf");
                     }
 
                 }
@@ -103,6 +92,23 @@ public class StepService extends Service {
             }
         }).start();
 
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (quit) {
+                    if (callback != null) {
+                        stepCount = listener.getStepCounts();//每0.2秒获取一次步数
+                        stepCount = stepCount+sCount;
+                        callback.onDataChanged(Integer.toString(stepCount));
+                    }
+                    try {
+                        Thread.sleep(200);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
     }
 
     @Override
@@ -112,6 +118,14 @@ public class StepService extends Service {
         if (sensorManager != null){
             sensorManager.unregisterListener(listener);
         }
+        StepData stData = DataSupport.findLast(StepData.class);
+        StepData stepData = new StepData();
+        stepData.setStepCount(Integer.toString(stepCount));
+        //Toast.makeText(MyApplication.getContext(),stepData.toString(),Toast.LENGTH_SHORT).show();
+        String today = new SimpleDateFormat("yyyy-MM-dd",Locale.CHINA).format(Calendar.getInstance().getTime());
+        stData.setToday(today);
+        int maxId = DataSupport.findLast(StepData.class).getId();
+        stepData.update(maxId);
     }
 
     @Override
