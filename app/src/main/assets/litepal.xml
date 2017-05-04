@@ -6,5 +6,6 @@
 
     <list>
         <mapping class="com.example.pedometer.StepData" />
+        <mapping class="com.example.pedometer.PersonData" />
     </list>
 </litepal>
