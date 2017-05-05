@@ -23,12 +23,16 @@ import java.util.Locale;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
-    public TextView stepCount;
+    private SharedPreferencesUtils sp;
+
+    //public TextView stepCount;
     public TextView lookData;
     public TextView setPlan;
     public TextView mA_home;
     public TextView mA_sport;
     public TextView mA_information;
+
+    private StepArcView step_arc_view;
     StepService.StepBinder binder = null;
     //private String save_stepCount;
 
@@ -65,7 +69,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 switch (msg.what)
                 {
                     case 1:
-                        stepCount.setText(msg.getData().getString("data"));
+                        String stepNumberTarget = (String)sp.getParam("stepNumberTarget","700");
+                        step_arc_view.setCurrentCount(Integer.parseInt(stepNumberTarget),Integer.parseInt(msg.getData().getString("data")));
+                       // stepCount.setText(msg.getData().getString("data"));
                         break;
                     default:
                         break;
@@ -76,11 +82,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void initViews(){
         lookData = (TextView)findViewById(R.id.look_data);
-        stepCount = (TextView)findViewById(R.id.step_count);
+        //stepCount = (TextView)findViewById(R.id.step_count);
         setPlan = (TextView)findViewById(R.id.plan_set);
         mA_home = (TextView)findViewById(R.id.tv_home);
         mA_sport = (TextView)findViewById(R.id.tv_sport);
         mA_information = (TextView)findViewById(R.id.tv_info);
+        step_arc_view = (StepArcView)findViewById(R.id.step_arc_view);
     }
     public void viewAddListener(){
         lookData.setOnClickListener(this);
@@ -95,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         initViews();
         viewAddListener();
+        sp = new SharedPreferencesUtils(this);
         Connector.getDatabase();
         final Intent intent = new Intent(this, StepService.class);
         bindService(intent, conn, Service.BIND_AUTO_CREATE);
