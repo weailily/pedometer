@@ -17,6 +17,7 @@ import android.widget.TextView;
 import org.litepal.crud.DataSupport;
 import org.litepal.tablemanager.Connector;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -31,10 +32,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public TextView mA_home;
     public TextView mA_sport;
     public TextView mA_information;
+    public TextView distance;
+    public TextView energy;
 
     private StepArcView step_arc_view;
     StepService.StepBinder binder = null;
-    //private String save_stepCount;
+    private int stepNumber;
+    DecimalFormat df;
 
 
     /**
@@ -70,8 +74,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 {
                     case 1:
                         String stepNumberTarget = (String)sp.getParam("stepNumberTarget","700");
-                        step_arc_view.setCurrentCount(Integer.parseInt(stepNumberTarget),Integer.parseInt(msg.getData().getString("data")));
-                       // stepCount.setText(msg.getData().getString("data"));
+                        stepNumber = Integer.parseInt(msg.getData().getString("data"));
+                        step_arc_view.setCurrentCount(Integer.parseInt(stepNumberTarget),stepNumber);
+                        distance.setText(String.valueOf(df.format(stepNumber*0.68/1000)));
+                        energy.setText(String.valueOf(df.format(stepNumber*0.68*70*1.036/1000)));
                         break;
                     default:
                         break;
@@ -88,6 +94,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mA_sport = (TextView)findViewById(R.id.tv_sport);
         mA_information = (TextView)findViewById(R.id.tv_info);
         step_arc_view = (StepArcView)findViewById(R.id.step_arc_view);
+        distance = (TextView)findViewById(R.id.tv_distance);
+        energy = (TextView)findViewById(R.id.tv_energy);
     }
     public void viewAddListener(){
         lookData.setOnClickListener(this);
@@ -100,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        df = new DecimalFormat("#0.00");
         initViews();
         viewAddListener();
         sp = new SharedPreferencesUtils(this);
