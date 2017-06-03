@@ -12,8 +12,10 @@ import android.widget.Toast;
 
 import org.litepal.crud.DataSupport;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 public class StepService extends Service {
@@ -25,6 +27,8 @@ public class StepService extends Service {
 
     private  SensorManager sensorManager;
     public StepDetector listener;
+
+    public PersonData data;
 
     private StepBinder binder = new StepBinder();
     public class StepBinder extends Binder{
@@ -46,17 +50,21 @@ public class StepService extends Service {
         Sensor sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);//加速度传感器
         listener = new StepDetector();//计步监听类实例
         sensorManager.registerListener(listener, sensor, SensorManager.SENSOR_DELAY_NORMAL);//为加速度传感器注册监听器
+        SharedPreferencesUtils sp = new SharedPreferencesUtils(this);
+        String name = sp.getParam("username","").toString().trim();
+        List<PersonData> personDatas = DataSupport.where("userName = ?",name).find(PersonData.class);
+        data = personDatas.get(0);
         new Thread( new Runnable() {
             @Override
             public void run() {
                 StepData sData = DataSupport.findLast(StepData.class);
                 if(sData == null){
                     sData = new StepData();
-                    sData.setId(0);
                     sData.setStepCount("0");
                     String today = new SimpleDateFormat("yyyy-MM-dd",Locale.CHINA).format(Calendar.getInstance().getTime());
-                    Log.d("SetPlanActivity",today);
                     sData.setToday(today);
+                    sData.setDistance(0);
+                    sData.setEnergy(0);
                     sData.save();
                 }
                 else {
@@ -65,29 +73,43 @@ public class StepService extends Service {
                     if (!curDate.equals(lastDate)) {
                         StepData stepData = new StepData();
                         stepData.setStepCount("0");
-                        sData.setToday(curDate);
+                        stepData.setToday(curDate);
+                        sData.setDistance(0);
+                        sData.setEnergy(0);
                         stepData.save();
                         sCount = 0;
                     }
                     else{
                         sCount = Integer.valueOf(sData.getStepCount());
-                        Log.d("SetPlanActivity","jfalkfhaajfjahafhlahf");
                     }
-
                 }
                 while(quit) {
-                    try{
-                        Thread.sleep(30000);
-                    }catch (InterruptedException e){
-                        e.printStackTrace();
+                        StepData stepData = new StepData();
+                        String lastDate = DataSupport.findLast(StepData.class).getToday();
+                        String today2 = new SimpleDateFormat("yyyy-MM-dd",Locale.CHINA).format(Calendar.getInstance().getTime());
+                        if (!today2.equals(lastDate)) {
+                            stepData.setStepCount("0");
+                            stepData.setToday(today2);
+                            sData.setDistance(0);
+                            sData.setEnergy(0);
+                            stepData.save();
+                            sCount = 0;
+                        }else {
+                        stepData.setStepCount(Integer.toString(stepCount));
+                        stepData.setToday(today2);
+                        DecimalFormat df = new DecimalFormat("#0.00");
+                        String distance = df.format(stepCount*0.68/1000);
+                        String energy = df.format(stepCount*0.68*data.getUserBodyWeight()*1.036/1000);
+                        stepData.setDistance(Double.valueOf(distance));
+                        stepData.setEnergy(Double.valueOf(energy));
+                        int maxId = DataSupport.findLast(StepData.class).getId();
+                        stepData.update(maxId);
+                        try {
+                            Thread.sleep(10000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
-                    StepData stepData = new StepData();
-                    stepData.setStepCount(Integer.toString(stepCount));
-                    //Toast.makeText(MyApplication.getContext(),stepData.toString(),Toast.LENGTH_SHORT).show();
-                    String today2 = new SimpleDateFormat("yyyy-MM-dd",Locale.CHINA).format(Calendar.getInstance().getTime());
-                    sData.setToday(today2);
-                    int maxId = DataSupport.findLast(StepData.class).getId();
-                    stepData.update(maxId);
                 }
             }
         }).start();
@@ -118,12 +140,15 @@ public class StepService extends Service {
         if (sensorManager != null){
             sensorManager.unregisterListener(listener);
         }
-        StepData stData = DataSupport.findLast(StepData.class);
         StepData stepData = new StepData();
         stepData.setStepCount(Integer.toString(stepCount));
-        //Toast.makeText(MyApplication.getContext(),stepData.toString(),Toast.LENGTH_SHORT).show();
         String today = new SimpleDateFormat("yyyy-MM-dd",Locale.CHINA).format(Calendar.getInstance().getTime());
-        stData.setToday(today);
+        stepData.setToday(today);
+        DecimalFormat df = new DecimalFormat("#0.00");
+        String distance = df.format(stepCount*0.68/1000);
+        String energy = df.format(stepCount*0.68*data.getUserBodyWeight()*1.036/1000);
+        stepData.setDistance(Double.valueOf(distance));
+        stepData.setEnergy(Double.valueOf(energy));
         int maxId = DataSupport.findLast(StepData.class).getId();
         stepData.update(maxId);
     }

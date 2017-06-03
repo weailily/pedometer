@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff"
+    android:background="#eeeeee"
     android:weightSum="7"
     tools:context = "com.example.pedometer.MainActivity">
     <LinearLayout
@@ -53,8 +53,7 @@
             android:id="@+id/step_arc_view"
             android:layout_width="200dp"
             android:layout_height="200dp"
-
-                />
+        />
         <!--<TextView
             android:id="@+id/step_count"
             android:layout_width="wrap_content"

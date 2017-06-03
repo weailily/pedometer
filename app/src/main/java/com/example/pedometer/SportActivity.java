@@ -32,10 +32,12 @@ public class SportActivity extends AppCompatActivity implements View.OnClickList
             case R.id.tv_info:
                 Intent intent3 = new Intent(SportActivity.this,PersonalActivity.class);
                 startActivity(intent3);
+                finish();
                 break;
             case R.id.tv_home:
                 Intent intent4 = new Intent(SportActivity.this, MainActivity.class);
                 startActivity(intent4);
+                finish();
                 break;
             default:
                 break;

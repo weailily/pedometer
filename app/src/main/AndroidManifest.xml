@@ -9,7 +9,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LoginActivity">
+        <activity android:name=".LoadActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -43,6 +43,12 @@
         <activity android:name=".RegisterActivity">
         </activity>
         <activity android:name=".ResetpwdActivity">
+        </activity>
+        <activity android:name=".LoginActivity">
+        </activity>
+        <activity android:name=".setInformationActivity">
+        </activity>
+        <activity android:name=".HistoryShowActivity">
         </activity>
     </application>
 

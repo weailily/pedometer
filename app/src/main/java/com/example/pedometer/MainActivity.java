@@ -10,21 +10,18 @@ import android.os.IBinder;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import org.litepal.crud.DataSupport;
 import org.litepal.tablemanager.Connector;
-
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Locale;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     private SharedPreferencesUtils sp;
+    public PersonData data;
 
     //public TextView stepCount;
     public TextView lookData;
@@ -37,8 +34,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private StepArcView step_arc_view;
     StepService.StepBinder binder = null;
-    private int stepNumber;
+    public  int stepNumber;
     DecimalFormat df;
+
 
 
     /**
@@ -52,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             binder.getService().setCallback(new StepService.CallBack() {
                 @Override
                 public void onDataChanged(String data) {
-                  //  save_stepCount = data;
+                    //  save_stepCount = data;
                     Message msg = new Message();
                     msg.what = 1;
                     Bundle bundle = new Bundle();
@@ -76,8 +74,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         String stepNumberTarget = (String)sp.getParam("stepNumberTarget","700");
                         stepNumber = Integer.parseInt(msg.getData().getString("data"));
                         step_arc_view.setCurrentCount(Integer.parseInt(stepNumberTarget),stepNumber);
-                        distance.setText(String.valueOf(df.format(stepNumber*0.68/1000)));
-                        energy.setText(String.valueOf(df.format(stepNumber*0.68*70*1.036/1000)));
+                        distance.setText(df.format(stepNumber*0.68/1000));
+                        energy.setText(df.format(stepNumber*0.68*data.getUserBodyWeight()*1.036/1000));
                         break;
                     default:
                         break;
@@ -113,6 +111,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         viewAddListener();
         sp = new SharedPreferencesUtils(this);
         Connector.getDatabase();
+        String name = sp.getParam("username","").toString().trim();
+        List<PersonData> personDatas = DataSupport.where("userName = ?",name).find(PersonData.class);
+        data = personDatas.get(0);
+
         final Intent intent = new Intent(this, StepService.class);
         bindService(intent, conn, Service.BIND_AUTO_CREATE);
     }
@@ -130,10 +132,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.tv_sport:
                 Intent intent3 = new Intent(MainActivity.this, SportActivity.class);
                 startActivity(intent3);
+                finish();
                 break;
             case R.id.tv_info:
                 Intent intent4 = new Intent(MainActivity.this, PersonalActivity.class);
                 startActivity(intent4);
+                finish();
                 break;
             default:
                 break;
@@ -144,6 +148,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public  void onDestroy() {
         super.onDestroy();
         unbindService(conn);
-
     }
 }

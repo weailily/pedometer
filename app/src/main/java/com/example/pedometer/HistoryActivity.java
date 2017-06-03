@@ -1,10 +1,12 @@
 package com.example.pedometer;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -33,19 +35,25 @@ public class HistoryActivity extends Activity {
                 finish();
             }
         });
-        //StepData stepData = DataSupport.findLast(StepData.class);
-        // Log.d("SetPlanActivity",stepData.getStepCount());
-        //Log.d("SetPlanActivity",stepData.getToday());
         List<StepData> stepDataList = DataSupport.findAll(StepData.class);
         int n = stepDataList.size();
         int i = 0;
-        String[] stepData_ToString = new String[n];
+        final String[] stepData_ToString = new String[n];
         for (StepData stepData : stepDataList) {
             stepData_ToString[i++] = stepData.toString();
         }
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(HistoryActivity.this, android.R.layout.simple_list_item_1, stepData_ToString);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(HistoryActivity.this, android.R.layout.simple_list_item_1, stepData_ToString);
 
         listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                String date = stepData_ToString[i].substring(6,16);
+                Intent intent = new Intent(HistoryActivity.this,HistoryShowActivity.class);
+                intent.putExtra("date",date);
+                startActivity(intent);
+            }
+        });
     }
 
 }

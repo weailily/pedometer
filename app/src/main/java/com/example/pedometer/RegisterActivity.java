@@ -69,10 +69,17 @@ public class RegisterActivity extends AppCompatActivity {
                     PersonData personData = new PersonData();
                     personData.setUserName(userName);
                     personData.setUserPwd(userPwd);
+                    personData.setUserBodyWeight(75);
+                    personData.setUserHeight(170);
+                    personData.setSex("男");
+                    personData.setUserOtherName("12345");
+                    personData.setUserAge(20);
                     personData.save();
+                    Toast.makeText(this,"注册成功",Toast.LENGTH_SHORT).show();
                     Intent intent  = new Intent(RegisterActivity.this,LoginActivity.class);
                     startActivity(intent);
                     finish();
+
                 }
             }
         }
@@ -96,7 +103,6 @@ public class RegisterActivity extends AppCompatActivity {
             return false;
         }
         else{
-            Toast.makeText(this,"注册成功",Toast.LENGTH_SHORT).show();
             return true;
         }
     }

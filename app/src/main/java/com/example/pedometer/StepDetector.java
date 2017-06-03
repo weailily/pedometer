@@ -82,27 +82,27 @@ public class StepDetector implements SensorEventListener {
                     //Log.d("StepService","走路时显示步数为： "+ stepCounts);
                 }
             }else
-                if(peakOfWave >17.86f){
-                    if(differenceOfTime >= 200&&differenceOfTime <= 500){
-                        stepCounts++;
-                        //Log.d("StepService","跑步时显示步数为： "+ stepCounts);
-                        //Toast.makeText(MyApplication.getContext(),"跑步。。。",Toast.LENGTH_SHORT).show();
-                    }
+            if(peakOfWave >17.86f){
+                if(differenceOfTime >= 200&&differenceOfTime <= 500){
+                    stepCounts++;
+                    //Log.d("StepService","跑步时显示步数为： "+ stepCounts);
+                    //Toast.makeText(MyApplication.getContext(),"跑步。。。",Toast.LENGTH_SHORT).show();
                 }
+            }
         }
         aValueOld = value;
     }
     public boolean DetectorPeak(float newValue,float oldValue ){
         lastStatus = isDirectionUp;
-        if (newValue >= oldValue) {
-            isDirectionUp = true;
-            continueUpCount++;
+            if (newValue >= oldValue) {
+                isDirectionUp = true;
+                continueUpCount++;
         } else {
             continueUpFormerCount = continueUpCount;
             continueUpCount = 0;
             isDirectionUp = false;
         }
-        if (!isDirectionUp && lastStatus && (continueUpFormerCount >= 3)) {
+        if (!isDirectionUp && lastStatus && (continueUpFormerCount >= 2)) {
             peakOfWave = oldValue;
            // Log.d("StepService","peakOfWave = "+peakOfWave);
             return true;

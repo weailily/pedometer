@@ -17,7 +17,6 @@ import java.util.List;
 
 public class LoginActivity extends AppCompatActivity {
 
-    public int pwdresetFlag=0;
     private EditText mAccount;                        //用户名编辑
     private EditText mPwd;                            //密码编辑
     private Button mRegisterButton;                   //注册按钮
@@ -25,11 +24,12 @@ public class LoginActivity extends AppCompatActivity {
     private CheckBox mRememberCheck;
 
     private SharedPreferencesUtils login_sp;
-    private String userNameValue,passwordValue;         //用户名和密码值
+    public  String userNameValue;
+    private String passwordValue;         //用户名和密码值
 
-    private View loginView;                           //登录
-    private View loginSuccessView;                      //
-    private TextView loginSuccessShow;                  //登陆成功提示
+    public  View loginView;                           //登录
+    public  View loginSuccessView;                      //
+    public  TextView loginSuccessShow;                  //登陆成功提示
     private TextView mChangepwdText;                   //修改密码
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,12 +37,11 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         initView();
         login_sp = new SharedPreferencesUtils(this);
-        String name=(String)login_sp.getParam("USER_NAME", "");
-        String pwd =(String)login_sp.getParam("PASSWORD", "");
         boolean choseRemember =(boolean)login_sp.getParam("mRememberCheck", false);
-        boolean choseAutoLogin =(boolean)login_sp.getParam("mAutologinCheck", false);
         //如果上次选了记住密码，那进入登录页面也自动勾选记住密码，并填上用户名和密码
         if(choseRemember){
+            String name=(String)login_sp.getParam("USER_NAME", "");
+            String pwd =(String)login_sp.getParam("PASSWORD", "");
             mAccount.setText(name);
             mPwd.setText(pwd);
             mRememberCheck.setChecked(true);
@@ -106,13 +105,14 @@ public class LoginActivity extends AppCompatActivity {
             if(isExistName(userName)){
                 //判断密码是否正确
                 if(userPwd.equals(passwordValue)){
-                    //保存用户名和密码
-                    login_sp.setParam("USER_NAME",userName);
-                    login_sp.setParam("PASSWORD",userPwd);
+                    login_sp.setParam("username",userName);
 
                     //是否记住密码
                     if(mRememberCheck.isChecked()){
                         login_sp.setParam("mRememberCheck", true);
+                        //保存用户名和密码
+                        login_sp.setParam("USER_NAME",userName);
+                        login_sp.setParam("PASSWORD",userPwd);
                     }else {
                         login_sp.setParam("mRememberCheck", false);
                     }
@@ -124,14 +124,13 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(this,"密码错误",Toast.LENGTH_SHORT).show();
                 }
             }else {
-                Toast.makeText(this,"用户名错误",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this,"用户名不存在",Toast.LENGTH_SHORT).show();
             }
         }
     }
 
     /**
      * 判断用户名和密码框有没有输入，没有则提示
-     * @return
      */
     public boolean isUserNameAndPwdValid() {
         if (mAccount.getText().toString().trim().equals("")) {

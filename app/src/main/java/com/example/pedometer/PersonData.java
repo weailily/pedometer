@@ -2,18 +2,18 @@ package com.example.pedometer;
 
 import org.litepal.crud.DataSupport;
 
-/**
- * Created by weailily on 2017/5/3 0003.
- */
 public class PersonData extends DataSupport {
-    private String userId;//用户Id
+    private int  userId;//用户Id
     private  String userName;//用户名
     private  String userPwd;//用户密码
+    private String userOtherName;//昵称
+    private  String sex;//性别
     private int userAge;//年龄
-    private double userheight;//身高
+    private double userHeight;//身高
     private double userBodyWeight;//体重
 
-    public String getUserId() {
+
+    public int getUserId() {
         return userId;
     }
 
@@ -25,19 +25,27 @@ public class PersonData extends DataSupport {
         return userPwd;
     }
 
+    public String getUserOtherName() {
+        return userOtherName;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
     public int getUserAge() {
         return userAge;
     }
 
-    public double getUserheight() {
-        return userheight;
+    public double getUserHeight() {
+        return userHeight;
     }
 
     public double getUserBodyWeight() {
         return userBodyWeight;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 
@@ -49,12 +57,20 @@ public class PersonData extends DataSupport {
         this.userPwd = userPwd;
     }
 
+    public void setUserOtherName(String userOtherName) {
+        this.userOtherName = userOtherName;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
     public void setUserAge(int userAge) {
         this.userAge = userAge;
     }
 
-    public void setUserheight(double userheight) {
-        this.userheight = userheight;
+    public void setUserHeight(double userHeight) {
+        this.userHeight = userHeight;
     }
 
     public void setUserBodyWeight(double userBodyWeight) {

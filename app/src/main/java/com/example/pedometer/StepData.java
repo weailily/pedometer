@@ -8,10 +8,12 @@ public class StepData extends DataSupport {
     private int id;//主键
     private String  stepCount ;//每天步数
     private String today;//日期
+    private double distance;//路程
+    private double energy;//消耗的能量
 
     public int getId() {
         return id;
-    }
+}
 
     public String getStepCount() {
         return stepCount;
@@ -19,6 +21,14 @@ public class StepData extends DataSupport {
 
     public String getToday() {
         return today;
+    }
+
+    public double getDistance() {
+        return distance;
+    }
+
+    public double getEnergy() {
+        return energy;
     }
 
     public void setId(int id) {
@@ -33,7 +43,15 @@ public class StepData extends DataSupport {
         this.today = today;
     }
 
-     public String  toString(){
+    public void setEnergy(double energy) {
+        this.energy = energy;
+    }
+
+    public void setDistance(double distance) {
+        this.distance = distance;
+    }
+
+    public String  toString(){
      String s = "      "+today+"                                               "+stepCount+"步";
      return s;
      }
